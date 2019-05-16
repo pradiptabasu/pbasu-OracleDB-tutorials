@@ -1,0 +1,20 @@
+spool on;
+set echo off;
+set heading off;
+set feedback off;
+SET   SERVEROUTPUT  OFF;
+spool unlock.sql;
+select 'ALTER USER '|| USERNAME || ' account unlock;' from dba_users where ACCOUNT_STATUS like '%LOCKED%';
+spool off;
+@unlock.sql;
+spool on;
+set lines 300;
+set echo off;
+set heading off;
+set feedback off;
+SET   SERVEROUTPUT  OFF;
+spool pwchangeo.sql;
+select 'ALTER USER '|| USERNAME || ' identified by values ''' || spare4 || ''';' from dba_users,user$ 
+where ACCOUNT_STATUS like '%EXPIRED%' and USERNAME=NAME;
+spool off;
+@pwchangeo.sql;
